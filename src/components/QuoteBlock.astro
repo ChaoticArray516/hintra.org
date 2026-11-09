@@ -1,0 +1,10 @@
+---
+interface Props {
+  quotes: string[];
+}
+
+const { quotes } = Astro.props;
+---
+<blockquote class="quote-block">
+  {quotes.map((quote) => <p>{quote}</p>)}
+</blockquote>

@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const title = 'This page is not in the field guide.';
+const description = 'Return to Hintra and choose an entry from the index.';
+---
+<BaseLayout
+  title={title}
+  description={description}
+  path="/404/"
+  locale="en"
+  showChrome={false}
+  canonical={false}
+  noindex={true}
+  social={false}
+>
+  <div class="container not-found">
+    <p class="eyebrow">404 / NOT AN ENTRY</p>
+    <h1>{title}</h1>
+    <p>{description}</p>
+    <a class="button" href="/">Hintra home</a>
+  </div>
+</BaseLayout>

@@ -1,0 +1,60 @@
+---
+import '../styles/global.css';
+import SeoHead from '../components/SeoHead.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import type { LocaleCode } from '../data/types';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  locale: LocaleCode;
+  schema?: Record<string, unknown>;
+  alternates?: { hreflang: string; path: string }[];
+  showChrome?: boolean;
+  canonical?: boolean;
+  noindex?: boolean;
+  social?: boolean;
+}
+
+const {
+  title,
+  description,
+  path,
+  locale,
+  schema,
+  alternates = [],
+  showChrome = true,
+  canonical = true,
+  noindex = false,
+  social = true,
+} = Astro.props;
+const jsonLd = schema ? JSON.stringify(schema).replace(/</g, '\\u003c') : undefined;
+---
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <SeoHead
+      title={title}
+      description={description}
+      path={path}
+      locale={locale}
+      alternates={alternates}
+      canonical={canonical}
+      noindex={noindex}
+      social={social}
+    />
+  </head>
+  <body>
+    {showChrome && <SiteHeader currentPath={path} />}
+    <main id="main-content">
+      <slot />
+    </main>
+    {showChrome && <SiteFooter />}
+    {jsonLd && <script is:inline type="application/ld+json" set:html={jsonLd}></script>}
+  </body>
+</html>

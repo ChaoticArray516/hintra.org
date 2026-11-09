@@ -1,0 +1,14 @@
+---
+import { primaryNavigation, site } from '../data/site';
+import { route } from '../lib/url';
+---
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <p>{site.footerDisclaimer}</p>
+    <nav aria-label="Footer navigation">
+      <ul class="footer-nav">
+        {primaryNavigation.map((item) => <li><a href={route(item.path)}>{item.label}</a></li>)}
+      </ul>
+    </nav>
+  </div>
+</footer>

@@ -1,0 +1,52 @@
+---
+import type { LocaleCode } from '../data/types';
+import { absolute, asset } from '../lib/url';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  locale: LocaleCode;
+  alternates?: { hreflang: string; path: string }[];
+  canonical?: boolean;
+  noindex?: boolean;
+  social?: boolean;
+}
+
+const {
+  title,
+  description,
+  path,
+  locale,
+  alternates = [],
+  canonical = true,
+  noindex = false,
+  social = true,
+} = Astro.props;
+const pageUrl = absolute(path);
+const ogImage = asset('/og.png');
+---
+<title>{title}</title>
+<meta name="description" content={description} />
+{noindex && <meta name="robots" content="noindex" />}
+{canonical && <link rel="canonical" href={pageUrl} />}
+{alternates.map((alternate) => <link rel="alternate" hreflang={alternate.hreflang} href={absolute(alternate.path)} />)}
+{social && (
+  <>
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Hintra" />
+    <meta property="og:locale" content={locale} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Hintra — Daily puzzle game modes, explained" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content="Hintra — Daily puzzle game modes, explained" />
+  </>
+)}

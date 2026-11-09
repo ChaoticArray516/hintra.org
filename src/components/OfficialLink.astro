@@ -1,0 +1,16 @@
+---
+interface Props {
+  href: string;
+  label: string;
+  title: string;
+}
+
+const { href, label, title } = Astro.props;
+---
+<aside class="official-link">
+  <div>
+    <p class="official-link__title">{title}</p>
+    <p class="official-link__note">Opens in a new tab.</p>
+  </div>
+  <a class="button" href={href} target="_blank" rel="noopener">{label}<span aria-hidden="true"> ↗</span></a>
+</aside>

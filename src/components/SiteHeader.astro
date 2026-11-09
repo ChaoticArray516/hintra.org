@@ -1,0 +1,25 @@
+---
+import { primaryNavigation, routes } from '../data/site';
+import { route } from '../lib/url';
+
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+---
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href={route(routes.home)} aria-label="Hintra home">
+      <img src="/logo-monochrome.svg" width="32" height="32" alt="" />
+      <span>Hintra</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <ul class="site-nav">
+        {primaryNavigation.map((item) => (
+          <li><a href={route(item.path)} aria-current={currentPath === item.path ? 'page' : undefined}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>

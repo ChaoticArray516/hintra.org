@@ -1,0 +1,27 @@
+---
+import type { LocaleCode } from '../data/types';
+import { route } from '../lib/url';
+
+interface Props {
+  text: string;
+  locale?: LocaleCode;
+}
+
+interface TextPart {
+  text: string;
+  path?: string;
+}
+
+const { text, locale = 'en' } = Astro.props;
+const englishNames = ['THE ENDLESS DIVE', 'One in a Krillion', 'Happy Feet Two (2011)', 'Krillion Unlimited'];
+const languageParts = (value: string) => locale === 'en'
+  ? [value]
+  : value.split(/(THE ENDLESS DIVE|One in a Krillion|Happy Feet Two \(2011\)|Krillion Unlimited)/g);
+const parts: TextPart[] = text.split(/(\[[^\]]+\]\(\/[^)]*\))/g).filter(Boolean).map((part) => {
+  const link = part.match(/^\[([^\]]+)\]\((\/[^)]*)\)$/);
+  return link ? { text: link[1], path: link[2] } : { text: part };
+});
+---
+{parts.map((part) => part.path !== undefined
+  ? <a href={route(part.path)}>{part.text}</a>
+  : languageParts(part.text).map((value) => englishNames.includes(value) ? <span lang="en">{value}</span> : value))}

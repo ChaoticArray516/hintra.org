@@ -1,0 +1,52 @@
+---
+import Breadcrumbs from './Breadcrumbs.astro';
+import LangSwitch from './LangSwitch.astro';
+import FactCard from './FactCard.astro';
+import OfficialLink from './OfficialLink.astro';
+import FaqList from './FaqList.astro';
+import RelatedLinks from './RelatedLinks.astro';
+import InlineText from './InlineText.astro';
+import { krillion } from '../data/games/krillion';
+import { homePage } from '../data/pages/home';
+import { routes } from '../data/site';
+import type { FaqItem, PageData } from '../data/types';
+
+interface Props {
+  page: PageData;
+  faq: FaqItem[];
+}
+
+const { page, faq } = Astro.props;
+const breadcrumbs = [
+  { name: 'Hintra', path: routes.home },
+  { name: page.breadcrumbName, path: page.path },
+];
+if (!page.officialLabel) throw new Error(`Missing official link label for ${page.path}`);
+const officialHeading = page.sections[2].heading;
+---
+<div class="container reading-page">
+  <Breadcrumbs items={breadcrumbs} />
+  <LangSwitch current={page.locale} />
+  <header class="page-header">
+    <h1><InlineText text={page.h1} locale={page.locale} /></h1>
+    <p class="lead" data-copy><InlineText text={page.lead} locale={page.locale} /></p>
+  </header>
+  <FactCard
+    locale={page.locale}
+    items={[
+      { label: 'PLAYER NAME', value: 'Krillion Unlimited' },
+      { label: 'OFFICIAL NAME', value: krillion.unlimitedModeName },
+    ]}
+  />
+  <OfficialLink href={krillion.unlimitedEntry} label={page.officialLabel} title={officialHeading} />
+  <div class="prose">
+    {page.sections.map((section) => (
+      <section>
+        <h2 data-copy><InlineText text={section.heading} locale={page.locale} /></h2>
+        {section.paragraphs.map((paragraph) => <p data-copy><InlineText text={paragraph} locale={page.locale} /></p>)}
+      </section>
+    ))}
+  </div>
+  <FaqList items={faq} locale={page.locale} />
+  {page.locale === 'en' && <RelatedLinks items={[...homePage.entries]} />}
+</div>

@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import FactCard from '../components/FactCard.astro';
+import OfficialLink from '../components/OfficialLink.astro';
+import FaqList from '../components/FaqList.astro';
+import { geographyPage } from '../data/pages/krillion-geography';
+import { geographyFaq } from '../data/faq/krillion-geography';
+import { krillion } from '../data/games/krillion';
+import { routes } from '../data/site';
+import { buildGraph } from '../lib/schema';
+
+const breadcrumbs = [
+  { name: 'Hintra', path: routes.home },
+  { name: geographyPage.breadcrumbName, path: geographyPage.path },
+];
+const schema = buildGraph({
+  path: geographyPage.path,
+  title: geographyPage.title,
+  description: geographyPage.description,
+  inLanguage: geographyPage.locale,
+  breadcrumbs,
+  faq: geographyFaq,
+  aboutGame: {
+    name: krillion.name,
+    officialSite: krillion.officialSite,
+    description: geographyPage.aboutDescription,
+  },
+});
+---
+<BaseLayout
+  title={geographyPage.title}
+  description={geographyPage.description}
+  path={geographyPage.path}
+  locale={geographyPage.locale}
+  schema={schema}
+>
+  <div class="container reading-page">
+    <Breadcrumbs items={breadcrumbs} />
+    <header class="page-header">
+      <h1>{geographyPage.h1}</h1>
+      <p class="lead" data-copy>{geographyPage.lead}</p>
+    </header>
+    <div class="prose">
+      {geographyPage.sections.map((section) => (
+        <section>
+          <h2 data-copy>{section.heading}</h2>
+          {section.paragraphs.map((paragraph) => <p data-copy>{paragraph}</p>)}
+          {section.heading === 'The six regions' && (
+            <ul class="region-list">
+              {krillion.regions.map((region) => <li>{region}</li>)}
+            </ul>
+          )}
+          {section.heading === 'The Expeditions' && (
+            <FactCard items={[{ label: 'FORMAT', value: `${krillion.expeditionCount} Expeditions` }]} />
+          )}
+          {section.heading === 'Where the official entry is' && (
+            <OfficialLink href={krillion.geographyEntry} label={geographyPage.officialLabel} title={section.heading} />
+          )}
+        </section>
+      ))}
+    </div>
+    <FaqList items={geographyFaq} />
+  </div>
+</BaseLayout>

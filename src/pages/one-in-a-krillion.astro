@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import FaqList from '../components/FaqList.astro';
+import InlineText from '../components/InlineText.astro';
+import { oneInAKrillionPage } from '../data/pages/one-in-a-krillion';
+import { oneInAKrillionFaq } from '../data/faq/one-in-a-krillion';
+import { krillion } from '../data/games/krillion';
+import { routes } from '../data/site';
+import { buildGraph } from '../lib/schema';
+import { route } from '../lib/url';
+
+const breadcrumbs = [
+  { name: 'Hintra', path: routes.home },
+  { name: oneInAKrillionPage.breadcrumbName, path: oneInAKrillionPage.path },
+];
+const schema = buildGraph({
+  path: oneInAKrillionPage.path,
+  title: oneInAKrillionPage.title,
+  description: oneInAKrillionPage.description,
+  inLanguage: oneInAKrillionPage.locale,
+  breadcrumbs,
+  faq: oneInAKrillionFaq,
+  aboutGame: {
+    name: krillion.name,
+    officialSite: krillion.officialSite,
+    description: oneInAKrillionPage.aboutDescription,
+  },
+});
+---
+<BaseLayout
+  title={oneInAKrillionPage.title}
+  description={oneInAKrillionPage.description}
+  path={oneInAKrillionPage.path}
+  locale={oneInAKrillionPage.locale}
+  schema={schema}
+>
+  <div class="container reading-page">
+    <Breadcrumbs items={breadcrumbs} />
+    <header class="page-header">
+      <h1>{oneInAKrillionPage.h1}</h1>
+      <p class="lead" data-copy>{oneInAKrillionPage.lead}</p>
+    </header>
+    <div class="prose">
+      {oneInAKrillionPage.sections.map((section) => (
+        <section>
+          <h2 data-copy>{section.heading}</h2>
+          {section.paragraphs.map((paragraph) => <p data-copy>{paragraph}</p>)}
+        </section>
+      ))}
+    </div>
+    <aside class="entry-card">
+      <p data-copy><InlineText text={oneInAKrillionPage.entryCard} locale={oneInAKrillionPage.locale} /></p>
+    </aside>
+    <FaqList items={oneInAKrillionFaq} locale={oneInAKrillionPage.locale} />
+    <p><a href={route(routes.home)}>Hintra home</a></p>
+  </div>
+</BaseLayout>

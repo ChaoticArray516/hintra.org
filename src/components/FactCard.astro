@@ -1,0 +1,20 @@
+---
+import type { LocaleCode } from '../data/types';
+import InlineText from './InlineText.astro';
+
+interface Props {
+  items: { label: string; value: string }[];
+  locale?: LocaleCode;
+  class?: string;
+}
+
+const { items, locale = 'en', class: className = '' } = Astro.props;
+---
+<dl class:list={['fact-card', className]}>
+  {items.map((item) => (
+    <div class="fact-card__item">
+      <dt>{item.label}</dt>
+      <dd><InlineText text={item.value} locale={locale} /></dd>
+    </div>
+  ))}
+</dl>

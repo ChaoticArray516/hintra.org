@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import UnlimitedContent from '../../components/UnlimitedContent.astro';
+import { unlimitedPt } from '../../data/pages/krillion-unlimited.pt';
+import { unlimitedPtFaq } from '../../data/faq/krillion-unlimited.pt';
+import { krillion } from '../../data/games/krillion';
+import { unlimitedAlternates } from '../../data/locales';
+import { routes } from '../../data/site';
+import { buildGraph } from '../../lib/schema';
+
+const breadcrumbs = [
+  { name: 'Hintra', path: routes.home },
+  { name: unlimitedPt.breadcrumbName, path: unlimitedPt.path },
+];
+const schema = buildGraph({
+  path: unlimitedPt.path,
+  title: unlimitedPt.title,
+  description: unlimitedPt.description,
+  inLanguage: unlimitedPt.locale,
+  breadcrumbs,
+  faq: unlimitedPtFaq,
+  aboutGame: {
+    name: krillion.name,
+    officialSite: krillion.officialSite,
+    description: unlimitedPt.aboutDescription,
+  },
+});
+---
+<BaseLayout
+  title={unlimitedPt.title}
+  description={unlimitedPt.description}
+  path={unlimitedPt.path}
+  locale={unlimitedPt.locale}
+  schema={schema}
+  alternates={unlimitedAlternates}
+>
+  <UnlimitedContent page={unlimitedPt} faq={unlimitedPtFaq} />
+</BaseLayout>

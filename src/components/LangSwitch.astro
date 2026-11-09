@@ -1,0 +1,18 @@
+---
+import { locales, unlimitedLanguages } from '../data/locales';
+import type { LocaleCode } from '../data/types';
+import { route } from '../lib/url';
+
+interface Props {
+  current: LocaleCode;
+}
+
+const { current } = Astro.props;
+---
+<nav class="lang-switch" aria-label={locales[current].switchLabel}>
+  <ul>
+    {unlimitedLanguages.map((language) => (
+      <li><a href={route(language.path)} aria-current={current === language.code ? 'page' : undefined}>{locales[language.code].label}</a></li>
+    ))}
+  </ul>
+</nav>

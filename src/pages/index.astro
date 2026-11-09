@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { homePage } from '../data/pages/home';
+import { buildGraph } from '../lib/schema';
+import { route } from '../lib/url';
+
+const schema = buildGraph({
+  path: homePage.path,
+  title: homePage.title,
+  description: homePage.description,
+  inLanguage: homePage.locale,
+  isHome: true,
+});
+---
+<BaseLayout
+  title={homePage.title}
+  description={homePage.description}
+  path={homePage.path}
+  locale={homePage.locale}
+  schema={schema}
+>
+  <div class="container">
+    <section class="home-hero">
+      <div>
+        <h1>{homePage.h1}</h1>
+        <p class="lead" data-copy>{homePage.lead}</p>
+      </div>
+      <div class="brand-panel" aria-hidden="true">
+        <img src="/logo-monochrome.svg" width="128" height="128" alt="" />
+      </div>
+    </section>
+    <section class="home-entries">
+      <h2 data-copy>{homePage.entriesHeading}</h2>
+      <div class="entry-grid">
+        {homePage.entries.map((entry) => (
+          <article class="entry-card">
+            <h3><a href={route(entry.path)} data-copy>{entry.title}</a></h3>
+            <p data-copy>{entry.description}</p>
+          </article>
+        ))}
+      </div>
+      <p data-copy>{homePage.entriesFollowup}</p>
+    </section>
+    <section class="home-contents">
+      <h2 data-copy>{homePage.contentsHeading}</h2>
+      <p data-copy>{homePage.contents}</p>
+    </section>
+  </div>
+</BaseLayout>

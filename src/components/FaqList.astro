@@ -1,0 +1,22 @@
+---
+import type { FaqItem, LocaleCode } from '../data/types';
+import InlineText from './InlineText.astro';
+
+interface Props {
+  items: FaqItem[];
+  locale?: LocaleCode;
+}
+
+const { items, locale = 'en' } = Astro.props;
+---
+<section class="faq" data-faq-list>
+  <h2>FAQ</h2>
+  <div class="faq__items">
+    {items.map((item) => (
+      <details>
+        <summary data-faq-question data-copy><InlineText text={item.q} locale={locale} /></summary>
+        <p class="faq__answer" data-faq-answer data-copy><InlineText text={item.a} locale={locale} /></p>
+      </details>
+    ))}
+  </div>
+</section>
