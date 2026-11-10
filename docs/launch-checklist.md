@@ -124,19 +124,19 @@ Record the production version ID, UTC time, command/result evidence, and reviewe
 
 > 双规范 M2 已授权；`3f_final.md` 已就位并通过英文 audit-only 与独立计词。范围：3f-01/02/03/06A 原子实施、独立复核、3f-07A 部署验收。**部署前记录回滚目标，不为演练主动降低生产版本。**
 
-- [ ] `routes.krillionGame` 注册；`keywordClusters` 含 `krillion game` 词族；`primaryNavigation` 四项。
-- [ ] `indexablePages` 恰 8 条；dist 恰 8 个 index.html + 独立 404。
-- [ ] 枢纽页文案与 `3f_final.md` 逐字一致；FAQ 5 条与 Schema 同源。
-- [ ] 三个官方入口 URL 来自 `src/data/games/krillion.ts`（含 `sportsEntry`），可见标签与定稿一致，均为静态新标签页外链。
-- [ ] 枢纽页正文与 FAQ 无任何计时（S-04 扩展词形 + 人工复核），且除 `30 Expeditions` 外无数量事实；用户已裁定该数量红线不约束全站共享 RelatedLinks 摘要，后者继续逐字复用首页定稿。
-- [ ] 首页卡片 href 精确等于 `expectedHomeEntryRoutes`，`Five` 文案与旧 `Four` 清理完成；无硬编码卡数。
-- [ ] 390/768/1024/1440 四档无横滚且截图已审查；1024px 标题换行与卡片高度有记录；390px 入口标题与第一卡标题仍在首屏。
-- [ ] 英文非首页 5 页各恰有一个 `related-links` 且**无自链**；es/pt 无该块（S-14）。
-- [ ] 机检 27 项全绿；页/卡/FAQ 计数分别从 `expectedRoutes` / `expectedHomeEntryRoutes` / `faqCounts` 派生；S-01 与独立 expected 表交叉验证。
-- [ ] 临时副本负向自检：删除预期路由使 S-01/S-09/R-01/R-05 失配；删除英文 RelatedLinks 或恢复自链使 S-14 失配。
-- [ ] Node 22.23.4；`npm ci` / typecheck / build / check 全绿；两次构建 hash 一致；独立复核在临时副本完成。
-- [ ] 发布前当前版本、上一良好版本与回滚目标已记录；实际回滚如有发生，另记版本 ID / UTC 时间 / 结果。
-- [ ] TLS 验证保持开启，未使用 `NODE_TLS_REJECT_UNAUTHORIZED=0`，未为演练降低生产版本。
+- [x] `routes.krillionGame` 注册；`keywordClusters` 含 `krillion game` 词族；`primaryNavigation` 四项。
+- [x] `indexablePages` 恰 8 条；dist 恰 8 个 index.html + 独立 404。
+- [x] 枢纽页文案与 `3f_final.md` 逐字一致；FAQ 5 条与 Schema 同源。
+- [x] 三个官方入口 URL 来自 `src/data/games/krillion.ts`（含 `sportsEntry`），可见标签与定稿一致，均为静态新标签页外链。
+- [x] 枢纽页正文与 FAQ 无任何计时（S-04 扩展词形 + 人工复核），且除 `30 Expeditions` 外无数量事实；用户已裁定该数量红线不约束全站共享 RelatedLinks 摘要，后者继续逐字复用首页定稿。
+- [x] 首页卡片 href 精确等于 `expectedHomeEntryRoutes`，`Five` 文案与旧 `Four` 清理完成；无硬编码卡数。
+- [x] 390/768/1024/1440 四档无横滚且截图已审查；1024px 标题换行与卡片高度有记录；390px 入口标题与第一卡标题仍在首屏。
+- [x] 英文非首页 5 页各恰有一个 `related-links` 且**无自链**；es/pt 无该块（S-14）。
+- [x] 机检 27 项全绿；页/卡/FAQ 计数分别从 `expectedRoutes` / `expectedHomeEntryRoutes` / `faqCounts` 派生；S-01 与独立 expected 表交叉验证。
+- [x] 临时副本负向自检：删除预期路由使 S-01/S-09/R-01/R-05 失配；删除英文 RelatedLinks 或恢复自链使 S-14 失配。
+- [x] Node 22.23.4；`npm ci` / typecheck / build / check 全绿；两次构建 hash 一致；独立复核在临时副本完成。
+- [x] 发布前当前版本、上一良好版本与回滚目标已记录；实际回滚如有发生，另记版本 ID / UTC 时间 / 结果。
+- [x] TLS 验证保持开启，未使用 `NODE_TLS_REJECT_UNAUTHORIZED=0`，未为演练降低生产版本。
 - [ ] 部署后由用户对 `https://hintra.org/krillion-game/` 请求编入索引**一次**并记录提交状态，不把两周内收录作为 DoD。
 
 Release A local implementation evidence:
@@ -148,17 +148,18 @@ Release A local implementation evidence:
 - Independent temporary-copy rerun: clean npm ci/typecheck/build/check all exit 0; 27/27 twice; independent two-build HTML/XML aggregate SHA-256 (relative path + NUL + content) `fb6e53ba8d894226b8cd1f6b378046cb98d37c92e24f2cb7f8afaea59919879c`; source and review dist byte-identical.
 - Independent negative checks: removing `/krillion-game/` from `expectedRoutes` failed S-01/S-09/R-01/R-05; removing Noillirk RelatedLinks failed S-14. Temporary copies were removed.
 - Browser evidence: `temp/hintra-3f-a-*.png`; home/hub reviewed at 390/768/1024/1440, all other routes and 404 at 390. No horizontal overflow; 390×844 entries heading at 663px and first card title at 737–781px; 1024 home five-column cards equal 293px. Native FAQ Space toggle and 3px amber focus outline passed; hub content/FAQ/links remained readable with page JavaScript disabled.
-- Independent review outcome: P0=0, P1=0; Release A local review passed and is ready for user/reviewer deployment. The user ruled that the hub quantity redline covers its body and FAQ, not shared RelatedLinks summaries. Production deployment and online acceptance remain pending; no deployment or account operation has occurred.
+- Independent review outcome: P0=0, P1=0; Release A local review passed and is ready for user/reviewer deployment. The user ruled that the hub quantity redline covers its body and FAQ, not shared RelatedLinks summaries. **Production deployed 2026-11-10 as version `3f81c503-1192-43d0-9225-90a3ff5a68a7`; online acceptance passed — see the receipt above.**
+- Deploy path: `npx wrangler deploy` with TLS verification on (no `NODE_TLS_REJECT_UNAUTHORIZED`), first attempt exit 0. Source committed and pushed to `https://github.com/ChaoticArray516/hintra.org.git` as `f4725b5`.
 
 Release A recovery review: if the Release A deployment fails acceptance, the user/reviewer selects the rollback target below in Workers version history, then verifies the seven pre-3F routes, real 404, trailing-slash 307, seven-entry sitemap, pre-3F home copy, and absence of `/krillion-game/`. Record the actual version ID, UTC time, and result only if a rollback occurs; do not downgrade production for a drill.
 
 Release A pre-deploy production version ID: `65a0e317-8eb4-4ae9-81b6-86d4b5751e27`
 Release A previous known-good version ID: `55117573-2a2a-4d5e-b53f-911108d2d11a` (historical 3A baseline)
 Release A rollback target version ID: `65a0e317-8eb4-4ae9-81b6-86d4b5751e27`
-Release A production version ID:
-Release A UTC time / result:
-Release A actual rollback evidence (if any):
-Release A reviewer:
+Release A production version ID: `3f81c503-1192-43d0-9225-90a3ff5a68a7`
+Release A UTC time / result: 2026-11-10T16:49Z / SUCCESS — `npx wrangler deploy` attempt 1, exit 0, 11 assets uploaded. Eight routes 200, missing path real 404, `/krillion-game` 307 → `/krillion-game/`, sitemap 8 URLs no lastmod, hub canonical self-ref with no hreflang, home 5 cards, nav 4 items, `related-links` on the 5 English content pages only and none of them self-linked.
+Release A actual rollback evidence (if any): none — no rollback occurred
+Release A reviewer: Claude Code (督察书记)
 
 ## Batch 3F · Release B（内容层）
 
