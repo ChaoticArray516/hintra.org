@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import FaqList from '../components/FaqList.astro';
+import InlineText from '../components/InlineText.astro';
+import OfficialLink from '../components/OfficialLink.astro';
+import RelatedLinks from '../components/RelatedLinks.astro';
+import { krillionGamePage } from '../data/pages/krillion-game';
+import { krillionGameFaq } from '../data/faq/krillion-game';
+import { krillion } from '../data/games/krillion';
+import { relatedEntries } from '../data/related';
+import { routes } from '../data/site';
+import { buildGraph } from '../lib/schema';
+import { route } from '../lib/url';
+
+const breadcrumbs = [
+  { name: 'Hintra', path: routes.home },
+  { name: krillionGamePage.breadcrumbName, path: krillionGamePage.path },
+];
+const schema = buildGraph({
+  path: krillionGamePage.path,
+  title: krillionGamePage.title,
+  description: krillionGamePage.description,
+  inLanguage: krillionGamePage.locale,
+  breadcrumbs,
+  faq: krillionGameFaq,
+  aboutGame: {
+    name: krillion.name,
+    officialSite: krillion.officialSite,
+    description: krillionGamePage.aboutDescription,
+  },
+});
+---
+<BaseLayout
+  title={krillionGamePage.title}
+  description={krillionGamePage.description}
+  path={krillionGamePage.path}
+  locale={krillionGamePage.locale}
+  schema={schema}
+>
+  <div class="container reading-page">
+    <Breadcrumbs items={breadcrumbs} />
+    <header class="page-header">
+      <h1>{krillionGamePage.h1}</h1>
+      <p class="lead" data-copy>{krillionGamePage.lead}</p>
+    </header>
+    <div class="prose">
+      {krillionGamePage.sections.map((section) => (
+        <section>
+          <h2 data-copy>{section.heading}</h2>
+          {section.paragraphs.map((paragraph) => <p data-copy><InlineText text={paragraph} locale={krillionGamePage.locale} /></p>)}
+          {section.heading === 'Where each official entry sits' && krillionGamePage.officialEntries.map((entry) => (
+            <OfficialLink href={entry.href} label={entry.label} title={entry.title} />
+          ))}
+        </section>
+      ))}
+    </div>
+    <FaqList items={krillionGameFaq} locale={krillionGamePage.locale} />
+    <RelatedLinks items={relatedEntries(krillionGamePage.path)} />
+    <p><a href={route(routes.home)}>Hintra home</a></p>
+  </div>
+</BaseLayout>

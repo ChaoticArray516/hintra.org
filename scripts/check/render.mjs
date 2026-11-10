@@ -29,7 +29,7 @@ export async function checkRender(context) {
     const canonical = tags(html, 'link').filter((tag) => attr(tag, 'rel') === 'canonical');
     return canonical.length !== 1 || attr(canonical[0], 'href') !== origin + route;
   });
-  results.push(result('R-02', canonicalFailures.length === 0, canonicalFailures.length ? `canonical failures: ${canonicalFailures.join(', ')}` : 'seven self-referencing canonical URLs'));
+  results.push(result('R-02', canonicalFailures.length === 0, canonicalFailures.length ? `canonical failures: ${canonicalFailures.join(', ')}` : `${expectedRoutes.length} self-referencing canonical URLs`));
 
   const langFailures = expectedRoutes.filter((route) => {
     const expected = route.startsWith('/es/') ? 'es' : route.startsWith('/pt/') ? 'pt' : 'en';

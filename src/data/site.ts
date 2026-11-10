@@ -7,6 +7,7 @@ export const site = {
 
 export const routes = {
   home: '/',
+  krillionGame: '/krillion-game/',
   unlimited: '/krillion-unlimited/',
   noillirk: '/noillirk/',
   geography: '/krillion-geography/',
@@ -16,6 +17,11 @@ export const routes = {
 } as const;
 
 export const keywordClusters = [
+  {
+    // This hub is the only page that may define the Krillion game itself.
+    path: routes.krillionGame,
+    queries: ['krillion game', 'krillion', 'what is krillion', 'krillion modes'],
+  },
   {
     path: routes.oneInAKrillion,
     queries: [
@@ -32,6 +38,7 @@ export const keywordClusters = [
 ] as const;
 
 export const primaryNavigation = [
+  { label: 'Krillion Game', path: routes.krillionGame },
   { label: 'Krillion Unlimited', path: routes.unlimited },
   { label: 'Noillirk', path: routes.noillirk },
   { label: 'Krillion Geography', path: routes.geography },

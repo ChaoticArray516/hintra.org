@@ -4,9 +4,11 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import FactCard from '../components/FactCard.astro';
 import OfficialLink from '../components/OfficialLink.astro';
 import FaqList from '../components/FaqList.astro';
+import RelatedLinks from '../components/RelatedLinks.astro';
 import { geographyPage } from '../data/pages/krillion-geography';
 import { geographyFaq } from '../data/faq/krillion-geography';
 import { krillion } from '../data/games/krillion';
+import { relatedEntries } from '../data/related';
 import { routes } from '../data/site';
 import { buildGraph } from '../lib/schema';
 
@@ -61,5 +63,6 @@ const schema = buildGraph({
       ))}
     </div>
     <FaqList items={geographyFaq} />
+    <RelatedLinks items={relatedEntries(geographyPage.path)} />
   </div>
 </BaseLayout>

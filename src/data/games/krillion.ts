@@ -4,6 +4,7 @@ export const krillion = {
   unlimitedEntry: 'https://krillion.io/unlimited/classic',
   unlimitedModeName: 'THE ENDLESS DIVE',
   geographyEntry: 'https://krillion.io/geography',
+  sportsEntry: 'https://krillion.io/sports',
   expeditionCount: 30,
   regions: [
     'THE RAINFOREST',

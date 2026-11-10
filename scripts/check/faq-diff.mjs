@@ -1,6 +1,7 @@
 import { expectedRoutes, jsonLd, result, textOf } from './helpers.mjs';
 
 const faqCounts = {
+  '/krillion-game/': 5,
   '/krillion-unlimited/': 5,
   '/one-in-a-krillion/': 4,
   '/noillirk/': 5,
@@ -41,5 +42,6 @@ export async function checkFaq(context) {
       }
     });
   }
-  return [result('S-06', failures.length === 0, failures.length ? failures.join(' | ') : 'visible FAQ and Schema match verbatim in order: 5/4/5/4/3/3')];
+  const expectedSequence = expectedRoutes.map((route) => faqCounts[route] ?? 0).join('/');
+  return [result('S-06', failures.length === 0, failures.length ? failures.join(' | ') : `visible FAQ and Schema match verbatim in order: ${expectedSequence}`)];
 }

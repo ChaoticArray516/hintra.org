@@ -7,7 +7,7 @@ import FaqList from './FaqList.astro';
 import RelatedLinks from './RelatedLinks.astro';
 import InlineText from './InlineText.astro';
 import { krillion } from '../data/games/krillion';
-import { homePage } from '../data/pages/home';
+import { relatedEntries } from '../data/related';
 import { routes } from '../data/site';
 import type { FaqItem, PageData } from '../data/types';
 
@@ -22,7 +22,13 @@ const breadcrumbs = [
   { name: page.breadcrumbName, path: page.path },
 ];
 if (!page.officialLabel) throw new Error(`Missing official link label for ${page.path}`);
-const officialHeading = page.sections[2].heading;
+const officialHeadings = {
+  en: 'Where the official entry is',
+  es: 'Dónde está la entrada oficial',
+  pt: 'Onde fica a entrada oficial',
+} as const;
+const officialHeading = page.sections.find((section) => section.heading === officialHeadings[page.locale])?.heading;
+if (!officialHeading) throw new Error(`Missing official entry section for ${page.path}`);
 ---
 <div class="container reading-page">
   <Breadcrumbs items={breadcrumbs} />
@@ -48,5 +54,5 @@ const officialHeading = page.sections[2].heading;
     ))}
   </div>
   <FaqList items={faq} locale={page.locale} />
-  {page.locale === 'en' && <RelatedLinks items={[...homePage.entries]} />}
+  {page.locale === 'en' && <RelatedLinks items={relatedEntries(page.path)} />}
 </div>

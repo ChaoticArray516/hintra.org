@@ -5,9 +5,11 @@ import QuoteBlock from '../components/QuoteBlock.astro';
 import FactCard from '../components/FactCard.astro';
 import OfficialLink from '../components/OfficialLink.astro';
 import FaqList from '../components/FaqList.astro';
+import RelatedLinks from '../components/RelatedLinks.astro';
 import { noillirkPage } from '../data/pages/noillirk';
 import { noillirkFaq } from '../data/faq/noillirk';
 import { noillirk } from '../data/games/noillirk';
+import { relatedEntries } from '../data/related';
 import { routes } from '../data/site';
 import { buildGraph } from '../lib/schema';
 
@@ -69,5 +71,6 @@ const schema = buildGraph({
       ))}
     </div>
     <FaqList items={noillirkFaq} />
+    <RelatedLinks items={relatedEntries(noillirkPage.path)} />
   </div>
 </BaseLayout>

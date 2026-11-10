@@ -3,9 +3,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import FaqList from '../components/FaqList.astro';
 import InlineText from '../components/InlineText.astro';
+import RelatedLinks from '../components/RelatedLinks.astro';
 import { oneInAKrillionPage } from '../data/pages/one-in-a-krillion';
 import { oneInAKrillionFaq } from '../data/faq/one-in-a-krillion';
 import { krillion } from '../data/games/krillion';
+import { relatedEntries } from '../data/related';
 import { routes } from '../data/site';
 import { buildGraph } from '../lib/schema';
 import { route } from '../lib/url';
@@ -53,6 +55,7 @@ const schema = buildGraph({
       <p data-copy><InlineText text={oneInAKrillionPage.entryCard} locale={oneInAKrillionPage.locale} /></p>
     </aside>
     <FaqList items={oneInAKrillionFaq} locale={oneInAKrillionPage.locale} />
+    <RelatedLinks items={relatedEntries(oneInAKrillionPage.path)} />
     <p><a href={route(routes.home)}>Hintra home</a></p>
   </div>
 </BaseLayout>

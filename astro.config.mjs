@@ -3,6 +3,7 @@ import sitemap from '@astrojs/sitemap';
 
 const indexablePages = [
   'https://hintra.org/',
+  'https://hintra.org/krillion-game/',
   'https://hintra.org/krillion-unlimited/',
   'https://hintra.org/noillirk/',
   'https://hintra.org/krillion-geography/',

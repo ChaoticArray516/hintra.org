@@ -5,12 +5,21 @@ export const distRoot = path.resolve('dist');
 export const origin = 'https://hintra.org';
 export const expectedRoutes = [
   '/',
+  '/krillion-game/',
   '/krillion-unlimited/',
   '/one-in-a-krillion/',
   '/noillirk/',
   '/krillion-geography/',
   '/es/krillion-unlimited/',
   '/pt/krillion-unlimited/',
+];
+
+export const expectedHomeEntryRoutes = [
+  '/krillion-game/',
+  '/krillion-unlimited/',
+  '/noillirk/',
+  '/krillion-geography/',
+  '/one-in-a-krillion/',
 ];
 
 export function result(id, pass, message) {

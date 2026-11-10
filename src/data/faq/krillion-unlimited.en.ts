@@ -11,7 +11,7 @@ export const unlimitedEnFaq = [
   },
   {
     q: 'Is One in a Krillion a mode?',
-    a: "No. It is the game's top rarity title, borrowed from a line in Happy Feet Two (2011). It also gets used loosely as a name for the game.",
+    a: "No. It is the game's top rarity title, and the phrase itself comes from a line in Happy Feet Two (2011). The modes and packs are separate, and each has its own page on the official site.",
   },
   {
     q: 'Does Hintra host or copy Krillion?',

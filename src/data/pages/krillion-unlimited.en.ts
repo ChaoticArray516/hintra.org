@@ -21,7 +21,13 @@ export const unlimitedEn = {
     {
       heading: 'One in a Krillion and the other names people search',
       paragraphs: [
-        'One in a Krillion is the game\'s top rarity title, and the phrase is older than the game. It is a line from Happy Feet Two (2011), spoken by one of two krill, playing on "one in a million" by swapping the unit for the animal. The game borrowed it as the name of its rarest tier. Because the phrase now names both a film line and a game tier, it also appears as a loose way of naming the game. Related searches take forms like "One in a Krillion unlimited", "One in a Krillion game" and "One in a Krillion multiplayer". Those are recorded here as phrases people type, not as descriptions of features. This page has not verified that any multiplayer option exists, and nothing in the game\'s own labels ties multiplayer to THE ENDLESS DIVE.',
+        '"One in a Krillion" is the game\'s top rarity title. The phrase is older than the game: it comes from a line in Happy Feet Two (2011), and the full movie and meaning story is on the [One in a Krillion](/one-in-a-krillion/) page. Because the phrase now names both a film line and a game tier, it also appears as a loose way of naming the game. Related searches take forms like "One in a Krillion unlimited", "One in a Krillion game" and "One in a Krillion multiplayer". Those are recorded here as phrases people type, not as descriptions of features. This page has not verified that any multiplayer option exists, and nothing in the game\'s own labels ties multiplayer to THE ENDLESS DIVE.',
+      ],
+    },
+    {
+      heading: 'Is Krillion Unlimited the same as Krillion Geography',
+      paragraphs: [
+        'No. Krillion Unlimited is a mode, and the official site labels it THE ENDLESS DIVE. Krillion Geography is a separate themed pack with its own address. This site keeps a separate guide for [the geography pack](/krillion-geography/).',
       ],
     },
     {

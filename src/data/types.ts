@@ -10,6 +10,12 @@ export interface ContentSection {
   paragraphs: string[];
 }
 
+export interface OfficialEntry {
+  title: string;
+  label: string;
+  href: string;
+}
+
 export interface PageData {
   path: string;
   locale: LocaleCode;
@@ -21,5 +27,6 @@ export interface PageData {
   officialLabel?: string;
   aboutDescription: string;
   entryCard?: string;
+  officialEntries?: OfficialEntry[];
   sections: ContentSection[];
 }

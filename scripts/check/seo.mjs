@@ -1,20 +1,59 @@
-import { attr, copyText, expectedRoutes, jsonLd, origin, result, tags, textOf } from './helpers.mjs';
+import { attr, copyText, expectedHomeEntryRoutes, expectedRoutes, jsonLd, origin, result, tags, textOf } from './helpers.mjs';
 
+const krillionGameRoute = '/krillion-game/';
 const oneInAKrillionRoute = '/one-in-a-krillion/';
+const krillionGameH2 = [
+  'What Krillion is',
+  'The modes and themed packs',
+  'Where each official entry sits',
+  'What this page does not cover',
+];
 const oneInAKrillionH2 = [
   'Which movie the line is from',
   'How the joke is built',
   'How much is a krillion',
   'Why the game uses it',
 ];
+const krillionGameAboutDescription = 'Krillion is a daily puzzle game at krillion.io. This page covers the game\'s naming and structure: its main mode, its themed packs, and the official entry for each, without reproducing game content.';
+const krillionGameOfficialEntries = [
+  { title: 'THE ENDLESS DIVE', label: 'Main mode on krillion.io', href: 'https://krillion.io/unlimited/classic' },
+  { title: 'Geography', label: 'Geography pack on krillion.io', href: 'https://krillion.io/geography' },
+  { title: 'Sports', label: 'Sports pack on krillion.io', href: 'https://krillion.io/sports' },
+];
+const homeEntriesFollowup = 'Krillion Game covers the game itself. Krillion Unlimited is one mode inside it, the one the game labels THE ENDLESS DIVE. Krillion Geography is one themed pack inside the same game. One in a Krillion is not a mode: it is a line from Happy Feet Two (2011) that Krillion also uses as its top rarity title. Noillirk is separate: a different daily game, on its own site.';
 const multiplayerDisclaimer = 'This page has not verified that any multiplayer option exists, and nothing in the game\'s own labels ties multiplayer to THE ENDLESS DIVE.';
+const unlimitedBlockA = '"One in a Krillion" is the game\'s top rarity title. The phrase is older than the game: it comes from a line in Happy Feet Two (2011), and the full movie and meaning story is on the One in a Krillion page. Because the phrase now names both a film line and a game tier, it also appears as a loose way of naming the game. Related searches take forms like "One in a Krillion unlimited", "One in a Krillion game" and "One in a Krillion multiplayer". Those are recorded here as phrases people type, not as descriptions of features. This page has not verified that any multiplayer option exists, and nothing in the game\'s own labels ties multiplayer to THE ENDLESS DIVE.';
+const unlimitedBlockCHeading = 'Is Krillion Unlimited the same as Krillion Geography';
+const unlimitedBlockC = 'No. Krillion Unlimited is a mode, and the official site labels it THE ENDLESS DIVE. Krillion Geography is a separate themed pack with its own address. This site keeps a separate guide for the geography pack.';
+const unlimitedFaq3 = 'No. It is the game\'s top rarity title, and the phrase itself comes from a line in Happy Feet Two (2011). The modes and packs are separate, and each has its own page on the official site.';
+const officialEntryHeadings = {
+  '/krillion-unlimited/': 'Where the official entry is',
+  '/es/krillion-unlimited/': 'Dónde está la entrada oficial',
+  '/pt/krillion-unlimited/': 'Onde fica a entrada oficial',
+};
+const englishRelatedRoutes = new Set([
+  '/krillion-game/',
+  '/krillion-unlimited/',
+  '/one-in-a-krillion/',
+  '/noillirk/',
+  '/krillion-geography/',
+]);
+const translatedRoutes = new Set(['/es/krillion-unlimited/', '/pt/krillion-unlimited/']);
+const numberWord = '(?:one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand)';
+const krillionGameTimingPattern = new RegExp(`\\b(?:\\d+|${numberWord})(?:[-\\s]+${numberWord})*[-\\s]+seconds?\\b|\\b(?:timer|timed|countdown)\\b`, 'i');
 
 const expected = {
   '/': {
     title: 'Hintra | Daily Puzzle Game Modes and Official Entries',
     description: 'Independent coverage of daily puzzle games: Krillion Unlimited, Noillirk, and Krillion Geography. Mode names, official entries and where each game lives.',
     h1: 'Hintra, an independent hub for daily puzzle games',
-    words: [185, 235],
+    words: [235, 310],
+  },
+  '/krillion-game/': {
+    title: 'Krillion Game: Modes, Packs and Official Entries',
+    description: "Krillion Game covers the game's modes and themed packs, the player name behind THE ENDLESS DIVE, and where each official entry sits on krillion.io.",
+    h1: 'Krillion Game: the modes, the packs and where each one opens',
+    words: [620, 780],
   },
   '/krillion-unlimited/': {
     title: 'Krillion Unlimited: THE ENDLESS DIVE, Explained',
@@ -73,47 +112,100 @@ function copyH2(html) {
   return [...html.matchAll(/<h2\b[^>]*data-copy[^>]*>([\s\S]*?)<\/h2>/gi)].map((match) => textOf(match[1]));
 }
 
+function sameStringSet(actual, wanted) {
+  return actual.length === wanted.length
+    && JSON.stringify([...actual].sort()) === JSON.stringify([...wanted].sort());
+}
+
 export async function checkSeo(context) {
   const results = [];
   const counts = {};
   const wordFailures = [];
+  const routeFailures = [];
+  const expectedTableRoutes = Object.keys(expected);
+  if (!sameStringSet(expectedRoutes, expectedTableRoutes)) routeFailures.push('expectedRoutes and expected table keys differ');
   for (const route of expectedRoutes) {
     const html = context.pages[route];
-    if (!html) continue;
+    const expectation = expected[route];
+    if (!html) {
+      routeFailures.push(`${route}: missing page`);
+      continue;
+    }
+    if (!expectation) {
+      routeFailures.push(`${route}: missing expected entry`);
+      continue;
+    }
     const count = copyText(html).split(/\s+/).filter(Boolean).length;
     counts[route] = count;
-    const [min, max] = expected[route].words;
+    const [min, max] = expectation.words;
     if (count < min || count > max) wordFailures.push(`${route}=${count} (${min}–${max})`);
   }
+  if (!sameStringSet(Object.keys(counts), expectedTableRoutes)) routeFailures.push('copy counts and expected table keys differ');
 
   const structureFailures = [];
+  const krillionGame = context.pages[krillionGameRoute];
+  if (!krillionGame || JSON.stringify(copyH2(krillionGame)) !== JSON.stringify(krillionGameH2)) structureFailures.push('Krillion Game H2 sequence');
+  if (krillionGame?.includes('class="lang-switch"')) structureFailures.push('Krillion Game LangSwitch');
+  for (const entry of krillionGameOfficialEntries) {
+    if (!krillionGame?.includes(`<p class="official-link__title">${entry.title}</p>`)
+      || !krillionGame.includes(`href="${entry.href}"`)
+      || !krillionGame.includes(entry.label)) structureFailures.push(`Krillion Game official entry=${entry.title}`);
+  }
   const oneInAKrillion = context.pages[oneInAKrillionRoute];
   if (!oneInAKrillion || JSON.stringify(copyH2(oneInAKrillion)) !== JSON.stringify(oneInAKrillionH2)) structureFailures.push('One in a Krillion H2 sequence');
   if (oneInAKrillion && (!oneInAKrillion.includes('href="/krillion-unlimited/"') || !oneInAKrillion.includes('href="/krillion-geography/"'))) structureFailures.push('One in a Krillion entry-card links');
   if (oneInAKrillion?.includes('class="lang-switch"')) structureFailures.push('One in a Krillion LangSwitch');
   const home = context.pages['/'];
   const homeCopy = home ? copyText(home) : '';
-  const homeCards = home?.match(/<article class="entry-card">/g) ?? [];
-  if (homeCards.length !== 4) structureFailures.push(`home cards=${homeCards.length}`);
-  if (!homeCopy.includes('Four places to start') || !homeCopy.includes('Four English entries are live at launch')) structureFailures.push('home Four copy');
-  if (!homeCopy.includes('The first two are separate games; the last two are a themed pack and a film phrase inside Krillion. Take whichever one you arrived for.')) structureFailures.push('home entriesFollowup');
-  if (/Three places to start|Three English entries are live at launch|the third is a themed pack inside Krillion/.test(homeCopy)) structureFailures.push('obsolete home Three copy');
-  const s01Failures = [...wordFailures, ...structureFailures];
-  results.push(result('S-01', s01Failures.length === 0 && Object.keys(counts).length === 7, s01Failures.length ? s01Failures.join(', ') : `copy word counts: ${Object.entries(counts).map(([route, count]) => `${route}=${count}`).join(', ')}`));
+  const homeCards = home?.match(/<article class="entry-card">[\s\S]*?<\/article>/gi) ?? [];
+  const homeEntryRoutes = homeCards.map((card) => {
+    const href = attr(tags(card, 'a')[0] ?? '', 'href');
+    if (!href) return 'missing-href';
+    const url = new URL(href, origin);
+    return url.origin === origin ? url.pathname : href;
+  });
+  if (homeEntryRoutes.length !== expectedHomeEntryRoutes.length
+    || homeEntryRoutes.some((route, index) => route !== expectedHomeEntryRoutes[index])) {
+    structureFailures.push(`home entry routes=${homeEntryRoutes.join(',')}`);
+  }
+  if (!homeCopy.includes('Five places to start') || !homeCopy.includes('Five English entries are live at launch')) structureFailures.push('home Five copy');
+  if (!homeCopy.includes(homeEntriesFollowup)) structureFailures.push('home entriesFollowup');
+  if (/Three places to start|Four places to start|Three English entries are live at launch|Four English entries are live at launch/.test(homeCopy)
+    || homeCopy.includes('The first two are separate games; the third is a themed pack inside Krillion. Take whichever one you arrived for.')
+    || homeCopy.includes('The first two are separate games; the last two are a themed pack and a film phrase inside Krillion. Take whichever one you arrived for.')) {
+    structureFailures.push('obsolete home copy');
+  }
+  const unlimitedEn = context.pages['/krillion-unlimited/'];
+  const unlimitedEnCopy = unlimitedEn ? copyText(unlimitedEn) : '';
+  if (!unlimitedEnCopy.includes(unlimitedBlockA)) structureFailures.push('Unlimited block A verbatim copy');
+  if (!unlimitedEnCopy.includes(unlimitedBlockCHeading) || !unlimitedEnCopy.includes(unlimitedBlockC)) structureFailures.push('Unlimited block C verbatim copy');
+  if (!unlimitedEnCopy.includes(unlimitedFaq3)) structureFailures.push('Unlimited FAQ-3 verbatim copy');
+  if (!unlimitedEn?.includes('<a href="/one-in-a-krillion/">One in a Krillion</a>')) structureFailures.push('Unlimited block A link');
+  if (!unlimitedEn?.includes('<a href="/krillion-geography/">the geography pack</a>')) structureFailures.push('Unlimited block C link');
+  for (const [route, heading] of Object.entries(officialEntryHeadings)) {
+    if (!context.pages[route]?.includes(`<p class="official-link__title">${heading}</p>`)) structureFailures.push(`${route} official entry heading`);
+  }
+  const s01Failures = [...routeFailures, ...wordFailures, ...structureFailures];
+  results.push(result('S-01', s01Failures.length === 0, s01Failures.length ? s01Failures.join(', ') : `copy word counts: ${Object.entries(counts).map(([route, count]) => `${route}=${count}`).join(', ')}`));
 
   const tdkFailures = expectedRoutes.filter((route) => {
     const html = context.pages[route];
-    return !html || title(html) !== expected[route].title || metaDescription(html) !== expected[route].description || h1(html) !== expected[route].h1;
+    const expectation = expected[route];
+    return !html || !expectation || title(html) !== expectation.title || metaDescription(html) !== expectation.description || h1(html) !== expectation.h1;
   });
-  const tdkRedline = expectedRoutes.filter((route) => /\bfree\b|\bbest\b|#1|guaranteed|\b\d+\s+seconds\b/i.test(`${title(context.pages[route])} ${metaDescription(context.pages[route])} ${h1(context.pages[route])}`));
+  const tdkRedline = expectedRoutes.filter((route) => {
+    const html = context.pages[route];
+    return html && /\bfree\b|\bbest\b|#1|guaranteed|\b\d+\s+seconds\b/i.test(`${title(html)} ${metaDescription(html)} ${h1(html)}`);
+  });
   results.push(result('S-02', tdkFailures.length === 0 && tdkRedline.length === 0, tdkFailures.length || tdkRedline.length ? `TDK failures=${tdkFailures.join(', ')}; redlines=${tdkRedline.join(', ')}` : 'Title, Meta, and single H1 equal the final copy and avoid TDK redlines'));
 
   const oldCopy = /Hints and Answers for Daily Puzzle Games|What does One in a Krillion mean\?|No numbered index|itspublic|the one organised around where a thing is|An Expedition is a single set of prompts/i;
   const oldRoutes = expectedRoutes.filter((route) => context.pages[route] && oldCopy.test(context.pages[route]));
   results.push(result('S-03', oldRoutes.length === 0, oldRoutes.length ? oldRoutes.join(', ') : 'no superseded copy or old FAQ signatures'));
 
-  const krillionRoutes = ['/', '/krillion-unlimited/', oneInAKrillionRoute, '/krillion-geography/', '/es/krillion-unlimited/', '/pt/krillion-unlimited/'];
+  const krillionRoutes = ['/', krillionGameRoute, '/krillion-unlimited/', oneInAKrillionRoute, '/krillion-geography/', '/es/krillion-unlimited/', '/pt/krillion-unlimited/'];
   const timingFailures = krillionRoutes.filter((route) => context.pages[route] && /\b(?:20|25|30|60)\s+seconds\b/i.test(context.pages[route]));
+  if (krillionGame && krillionGameTimingPattern.test(copyText(krillionGame))) timingFailures.push(`${krillionGameRoute} extended timing`);
   const noillirkRedlines = context.pages['/noillirk/'] && /\b(?:clone|fake|scam)\b|share a style, not an owner|not the (?:technically|factually) correct answer/i.test(context.pages['/noillirk/']);
   results.push(result('S-04', timingFailures.length === 0 && !noillirkRedlines, timingFailures.length || noillirkRedlines ? `timing=${timingFailures.join(', ')}; Noillirk=${noillirkRedlines}` : 'page-scoped timing and identity redlines absent'));
 
@@ -130,6 +222,7 @@ export async function checkSeo(context) {
       const breadcrumb = graph.find((node) => node['@type'] === 'BreadcrumbList');
       if (page.about?.['@id'] !== game?.['@id'] || game?.creator || game?.publisher) schemaFailures.push(`${route} VideoGame boundary`);
       if (route === oneInAKrillionRoute && (game?.url !== 'https://krillion.io/' || game?.description !== 'A daily puzzle game from krillion.io. This page covers the phrase "One in a Krillion", its film origin and why the game uses it as its rarest tier.')) schemaFailures.push('One in a Krillion aboutGame source');
+      if (route === krillionGameRoute && (game?.url !== 'https://krillion.io/' || game?.description !== krillionGameAboutDescription)) schemaFailures.push('Krillion Game aboutGame source');
       const visibleBreadcrumb = context.pages[route].match(/<nav class="breadcrumbs"[\s\S]*?<\/nav>/i)?.[0] ?? '';
       const visibleNames = [...visibleBreadcrumb.matchAll(/<li>([\s\S]*?)<\/li>/gi)].map((match) => textOf(match[1]));
       const schemaNames = breadcrumb?.itemListElement.map((item) => item.name) ?? [];
@@ -151,8 +244,12 @@ export async function checkSeo(context) {
 
   try {
     const sitemap = await context.read('sitemap-0.xml');
-    const count = (sitemap.match(/<loc>/g) ?? []).length;
-    results.push(result('S-09', count === 7 && !sitemap.includes('<lastmod>'), `sitemap has ${count} URLs and no lastmod`));
+    const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+    const expectedLocations = expectedRoutes.map((route) => origin + route);
+    const sitemapPass = locations.length === expectedRoutes.length
+      && sameStringSet(locations, expectedLocations)
+      && !sitemap.includes('<lastmod>');
+    results.push(result('S-09', sitemapPass, `sitemap URLs=${locations.length}; exact set=${sameStringSet(locations, expectedLocations)}; lastmod=${sitemap.includes('<lastmod>')}`));
   } catch {
     results.push(result('S-09', false, 'sitemap-0.xml missing'));
   }
@@ -177,5 +274,30 @@ export async function checkSeo(context) {
 
   const dated = Object.entries(context.pages).filter(([, html]) => /datePublished|dateModified|<lastmod>|new Date\(|Date\.now\(/.test(html)).map(([route]) => route);
   results.push(result('S-13', dated.length === 0, dated.length ? `dates: ${dated.join(', ')}` : 'no SEO dates in HTML; repeat-build hash comparison is run separately'));
+
+  const internalLinkFailures = [];
+  for (const route of expectedRoutes.filter((item) => item !== '/')) {
+    const html = context.pages[route];
+    const main = html?.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)?.[1] ?? '';
+    const internalRoutes = new Set();
+    for (const anchor of tags(main, 'a')) {
+      const href = attr(anchor, 'href');
+      if (!href) continue;
+      const url = new URL(href, origin);
+      if (url.origin === origin && url.pathname !== route) internalRoutes.add(url.pathname);
+    }
+    if (internalRoutes.size < 3) internalLinkFailures.push(`${route}: main routes=${internalRoutes.size}`);
+
+    const relatedBlocks = main.match(/<aside\b[^>]*class="related-links"[^>]*>[\s\S]*?<\/aside>/gi) ?? [];
+    if (englishRelatedRoutes.has(route)) {
+      if (relatedBlocks.length !== 1) internalLinkFailures.push(`${route}: related-links=${relatedBlocks.length}`);
+      if (relatedBlocks.some((block) => tags(block, 'a').some((anchor) => {
+        const href = attr(anchor, 'href');
+        return href && new URL(href, origin).pathname === route;
+      }))) internalLinkFailures.push(`${route}: related-links self-link`);
+    }
+    if (translatedRoutes.has(route) && relatedBlocks.length !== 0) internalLinkFailures.push(`${route}: translated related-links=${relatedBlocks.length}`);
+  }
+  results.push(result('S-14', internalLinkFailures.length === 0, internalLinkFailures.length ? internalLinkFailures.join(' | ') : 'main-content internal links and English RelatedLinks sets are complete, without self-links or translated blocks'));
   return results;
 }
